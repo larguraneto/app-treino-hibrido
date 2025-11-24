@@ -32,14 +32,19 @@ st.markdown("Periodização completa com gestão de fadiga (Corrida x Musculaç�
 # --- BARRA LATERAL ---
 with st.sidebar:
     st.header("⚙️ Configurações")
-    api_key = st.text_input("Sua Gemini API Key", type="password")
+    
+    # --- LÓGICA DE CHAVE SECRETA (AUTO-LOGIN) ---
+    # Verifica se a chave existe no cofre (Secrets)
+    if "GEMINI_KEY" in st.secrets:
+        api_key = st.secrets["GEMINI_KEY"]
+        st.success("✅ Licença Ativa: Sistema Conectado")
+    else:
+        # Se não achar o segredo (ex: rodando no seu PC sem config), pede input
+        api_key = st.text_input("Sua Gemini API Key", type="password")
     
     st.markdown("---")
     st.markdown("**Ciclo & Nível**")
-    semanas = st.slider("Duração do Ciclo (Semanas)", 8, 16, 12)
-    nivel_experiencia = st.selectbox("Nível do Atleta", ["Iniciante (Foco em Adaptação)", "Intermediário", "Avançado/Elite"])
-    
-    st.info("🧠 **Smart Logic Ativada:** O sistema evitará chocar treinos de perna pesados com treinos de corrida intensos.")
+    # ... (o resto do código continua igual)
 
 # --- SEÇÃO 1: PERFIL DE PERFORMANCE ---
 st.subheader("1. Perfil do Atleta")
