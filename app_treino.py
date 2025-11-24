@@ -85,7 +85,7 @@ with col_rot1:
     )
     divisao_treino = st.selectbox(
         "Estilo de Divisão Preferido", 
-        ["Upper / Lower (Superior/Inferior)", "Push / Pull / Legs (Empurrar/Puxar/Pernas)", "Full Body (Corpo Todo)"]
+        ["Upper / Lower (Superior/Inferior)", "Upper / Lower / fullbody (Superior/Inferior/Corpo Todo)" , "Push / Pull / Legs (Empurrar/Puxar/Pernas)", "Full Body (Corpo Todo)"]
     )
 
 with col_rot2:
@@ -178,3 +178,4 @@ if st.button("GERAR PLANEJAMENTO BLINDADO 🛡️"):
 
             except Exception as e:
                 st.error(f"Erro ao processar: {e}")
+
