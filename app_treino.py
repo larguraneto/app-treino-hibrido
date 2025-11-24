@@ -5,7 +5,7 @@ from datetime import datetime
 # --- Configuração da Página ---
 st.set_page_config(page_title="Hybrid Trainer Elite V3", layout="wide", page_icon="💎")
 
-# --- Estilo Visual (Mantendo o padrão aprovado) ---
+# --- Estilo Visual ---
 st.markdown("""
     <style>
     .stButton>button {
@@ -29,22 +29,28 @@ st.markdown("""
 st.title("💎 Hybrid Trainer: Inteligência Anti-Conflito")
 st.markdown("Periodização completa com gestão de fadiga (Corrida x Musculação).")
 
-# --- BARRA LATERAL ---
+# --- BARRA LATERAL (CORRIGIDA E COMPLETA) ---
 with st.sidebar:
     st.header("⚙️ Configurações")
     
-    # --- LÓGICA DE CHAVE SECRETA (AUTO-LOGIN) ---
-    # Verifica se a chave existe no cofre (Secrets)
+    # 1. Lógica da Chave Secreta (Auto-Login)
     if "GEMINI_KEY" in st.secrets:
         api_key = st.secrets["GEMINI_KEY"]
         st.success("✅ Licença Ativa: Sistema Conectado")
     else:
-        # Se não achar o segredo (ex: rodando no seu PC sem config), pede input
         api_key = st.text_input("Sua Gemini API Key", type="password")
     
     st.markdown("---")
+    
+    # 2. Configurações do Ciclo (Que tinham sumido)
     st.markdown("**Ciclo & Nível**")
-    # ... (o resto do código continua igual)
+    semanas = st.slider("Duração do Ciclo (Semanas)", 8, 16, 12)
+    nivel_experiencia = st.selectbox(
+        "Nível do Atleta", 
+        ["Iniciante (Foco em Adaptação)", "Intermediário", "Avançado/Elite"]
+    )
+    
+    st.info("🧠 **Smart Logic Ativada:** O sistema evitará chocar treinos de perna pesados com treinos de corrida intensos.")
 
 # --- SEÇÃO 1: PERFIL DE PERFORMANCE ---
 st.subheader("1. Perfil do Atleta")
@@ -64,7 +70,7 @@ st.markdown("**Cargas de Referência (Para calibrar a musculação):**")
 cargas_atuais = st.text_area("Cargas Atuais (Agachamento, Supino, etc)", 
                              value="Agachamento: 35kg/lado | Supino: 90kg total", height=70)
 
-# --- SEÇÃO 2: ESTRUTURA DA ROTINA (O Input Crucial) ---
+# --- SEÇÃO 2: ESTRUTURA DA ROTINA ---
 st.subheader("2. Definição da Rotina Semanal")
 st.caption("Selecione os dias disponíveis. A IA organizará a intensidade para evitar lesões.")
 
@@ -77,10 +83,9 @@ with col_rot1:
         ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
         ["Seg", "Ter", "Qui", "Sex"]
     )
-    # AQUI ESTÁ A SELEÇÃO QUE VOCÊ PEDIU
     divisao_treino = st.selectbox(
         "Estilo de Divisão Preferido", 
-        ["Upper / Lower (Superior/Inferior)", "Upper / Lower / full body (Superior/Inferior/Corpo Todo)" , "Push / Pull / Legs (Empurrar/Puxar/Pernas)", "Full Body (Corpo Todo)"]
+        ["Upper / Lower (Superior/Inferior)", "Push / Pull / Legs (Empurrar/Puxar/Pernas)", "Full Body (Corpo Todo)"]
     )
 
 with col_rot2:
@@ -96,13 +101,13 @@ with col_rot2:
 st.markdown("---")
 if st.button("GERAR PLANEJAMENTO BLINDADO 🛡️"):
     if not api_key:
-        st.error("⚠️ Insira a API Key na barra lateral.")
+        st.error("⚠️ Erro de Licença: Chave API não encontrada (Secrets ou Input).")
     elif not dias_musculacao or not dias_corrida:
         st.warning("⚠️ Selecione os dias de treino de força e corrida.")
     else:
         # Configuração do Modelo
         genai.configure(api_key=api_key)
-        # Usando o modelo Flash 2.5 (Melhor custo-benefício de inteligência)
+        # Usando o modelo Flash 2.5
         model = genai.GenerativeModel('models/gemini-2.5-flash-preview-09-2025')
 
         # --- PROMPT COM LÓGICA DE TREINADOR HUMANO ---
